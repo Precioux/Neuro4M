@@ -1,0 +1,64 @@
+# === DATA ===
+data:
+  train:
+    - /mnt/mahdipou/nsd/visual_betas/subj01_betas_visual_only.npy
+    - /mnt/mahdipou/nsd/visual_betas/subj02_betas_visual_only.npy
+    - /mnt/mahdipou/nsd/visual_betas/subj03_betas_visual_only.npy
+    - /mnt/mahdipou/nsd/visual_betas/subj04_betas_visual_only.npy
+    - /mnt/mahdipou/nsd/visual_betas/subj05_betas_visual_only.npy
+    - /mnt/mahdipou/nsd/visual_betas/subj06_betas_visual_only.npy
+
+  val:
+    - /mnt/mahdipou/nsd/visual_betas/subj07_betas_visual_only.npy
+    - /mnt/mahdipou/nsd/visual_betas/subj08_betas_visual_only.npy
+
+  batch_size: 128
+  num_workers: 4
+
+# === VQ SETTINGS ===
+vq:
+  quantizer: "ema"
+  beta_commit: 0.5
+  ema_decay: 0.99
+  entropy_lambda: 0.1
+  use_cosine: false
+
+  warmup_epochs: 5
+  soft_epochs: 5
+  temp_start: 1.0
+  temp_end: 0.1
+
+  dead_check_every: 1
+  dead_code_thr_pct: 0.0002
+
+# === MODEL SETTINGS ===
+model:
+  codebook_size: 1024
+  embedding_dim: 64
+  seq_len: 179
+
+  vit:
+    patch_len: 256         # ✅ برای هماهنگی با ViT1DEncoder
+    dim: 512
+    depth: 10
+    heads: 8
+    mlp_ratio: 4
+    dropout: 0.1
+    token_dropout: 0.05
+    pre_norm: true
+
+# === OPTIMIZER ===
+optim:
+  name: adamw
+  lr: 2.0e-4
+  weight_decay: 0.05
+  grad_clip: 1.0
+  epochs: 40
+
+# === LOGGING ===
+logging:
+  out_dir: ./runs/vitvq_ema
+  ckpt_every: 1
+  eval_every: 1
+  save_best_on: val/mse
+  num_eval_batches: 50
